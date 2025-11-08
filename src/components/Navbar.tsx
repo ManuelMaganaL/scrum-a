@@ -1,14 +1,25 @@
 "use client"
 
-import { User, LogOut } from "lucide-react"
+import { User, LogOut, LogIn } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "@/components/ui/Button"
 
 export default function Navbar() {
   const router = useRouter();
   const [showProfile, setShowProfile] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    const loadAuth = async () => {
+      const username = localStorage.getItem("username")
+      if (username) setIsAuth(true);
+      return;
+    }
+
+    loadAuth();
+  }, [])
 
   const toggleProfile = () => {
     setShowProfile((prev) => !prev);
@@ -28,38 +39,51 @@ export default function Navbar() {
         <li className="hover:font-semibold transition"><Link href={"/"}>Inicio</Link></li>
         <li className="hover:font-semibold transition"><Link href={"/activities"}>Actividades</Link></li>
         <li className="hover:font-semibold transition"><Link href={"/exam"}>Examen</Link></li>
-        <li className="relative border-2 border-cyan-500 flex items-center rounded-full p-1">
-          <button 
-            className="cursor-pointer"
-            onClick={toggleProfile}
-            aria-haspopup="dialog"
-            aria-expanded={showProfile}
-            aria-controls="user-popup"
-          >
-            <User className="text-cyan-500" size={24}/>
-          </button>
-          {showProfile && (
-            <div
-              id="user-popup"
-              className="text-center absolute right-0 top-11 z-50 w-48 rounded-md border border-gray-700 bg-gray-900 p-4 shadow-lg"
-              role="dialog"
-              aria-label="Perfil de usuario"
+        
+        {isAuth ? (
+          <li className="relative border-2 border-cyan-500 flex items-center rounded-full p-1"> 
+            <button 
+              className="cursor-pointer"
+              onClick={toggleProfile}
+              aria-haspopup="dialog"
+              aria-expanded={showProfile}
+              aria-controls="user-popup"
             >
-              <p className="mb-3 text-sm text-gray-200">Manuel Magaña López</p>
-              <Button
-                type="button"
-                onClick={handleLogout}
-                style="error"
-                content={
-                  <div className="text-sm flex items-center gap-1 justify-center">
-                    <LogOut size={16}/>
-                    Cerrar sesión
-                  </div>
-                }
-              />
-            </div>
-          )}
-        </li>
+              <User className="text-cyan-500" size={24}/>
+            </button>
+            {showProfile && (
+              <div
+                id="user-popup"
+                className="absolute right-0 top-11 z-50 w-48 rounded-md border border-gray-700 bg-gray-900 p-4 shadow-lg"
+                role="dialog"
+                aria-label="Perfil de usuario"
+              >
+                <p className="mb-3 text-sm text-gray-200">User: {localStorage.getItem("username")}</p>
+                <p className="mb-3 text-sm text-gray-200">Completados: {localStorage.getItem("completed")}/3</p>
+                <Button
+                  type="button"
+                  onClick={handleLogout}
+                  style="error"
+                  content={
+                    <div className="text-sm flex items-center gap-1 justify-center">
+                      <LogOut size={16}/>
+                      Cerrar sesión
+                    </div>
+                  }
+                />
+              </div>
+            )}
+          </li>
+        ) : (
+          <li>
+            <button
+              className="cursor-pointer"
+              onClick={() => router.push("/auth/login")}
+            >
+              <LogIn size={24}/>
+            </button>
+          </li>
+        )}
       </ul>
     </div>
   )

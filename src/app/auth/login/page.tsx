@@ -1,13 +1,25 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { randomInt } from "node:crypto";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Button from "@/components/ui/Button";
+import { useState } from "react";
 
 export default function Login() {
   const router = useRouter();
-  
+  const [usernmae, setUsername] = useState<string>("");
+
+  const handleSubmit = async () => {
+    localStorage.setItem("username", usernmae);
+
+    const random = Math.floor(Math.random() * 3) + 1;
+    localStorage.setItem("completed", String(random));
+
+    router.push("/");
+  }
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <Navbar />
@@ -17,16 +29,24 @@ export default function Login() {
           <h1 className="text-3xl">Inicia sesión</h1>
           <form className="flex flex-col gap-3" action={() => router.push("/activities")}>
             <label className="text-start" htmlFor="">Username:</label>
-            <input required className="border border-gray-700 rounded-md py-2 px-4" type="text" name="username" id="username" />
+            <input 
+              required
+              className="border border-gray-700 rounded-md py-2 px-4" 
+              type="text"
+              name="username" 
+              id="username"
+              value={usernmae}
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
             <label className="text-start" htmlFor="">Password</label>
             <input required className="border border-gray-700 rounded-md py-2 px-4" type="password" name="password" id="password" />
 
             <Button
-              type="submit"
+              type="button"
               style="main"
               content="Iniciar sesión"
-              onClick={() => {}}
+              onClick={handleSubmit}
             />
           </form>
 
