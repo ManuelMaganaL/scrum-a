@@ -6,10 +6,16 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tags";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
   
+  useEffect(() => {
+    const isAuth = localStorage.getItem("username");
+    if (!isAuth) router.push("/auth/login");
+  }, [])
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <Navbar />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,6 +11,11 @@ export default function Examen() {
   const [ans1, setAns1] = useState<string>("");
   const [ans2, setAns2] = useState<string>("");
   const [ans3, setAns3] = useState<string>("");
+
+  useEffect(() => {
+    const isAuth = localStorage.getItem("username");
+    if (!isAuth) router.push("/auth/login");
+  }, [])
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

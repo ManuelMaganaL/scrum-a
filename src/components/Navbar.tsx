@@ -26,6 +26,8 @@ export default function Navbar() {
   }
 
   const handleLogout = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("completed");
     router.push("/auth/login");
   }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,6 +8,11 @@ import Card from "@/components/ui/Cards";
 
 export default function Actividades() {
   const router = useRouter();
+
+  useEffect(() => {
+    const isAuth = localStorage.getItem("username");
+    if (!isAuth) router.push("/auth/login");
+  }, [])
   
   return (
     <div className="flex flex-col min-h-screen items-center justify-center font-sans">
